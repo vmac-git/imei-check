@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceleronix | IMEI Check</title>
+    <link rel="icon" type="image/x-icon" href="https://www.acceleronix.io/wp-content/uploads/2025/08/acc-favicon.ico" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="card">
+        <img src="https://www.acceleronix.io/wp-content/themes/acceleronix-en/images/logo.svg" alt="Logo Acceleronix" class="logo">
+        
+        <h1>Device check</h1>
+
+        <div class="form-group">
+            <label for="imeiInput">IMEI Number</label>
+            <input type="text" id="imeiInput" placeholder="Enter the 15-digit IMEI" maxlength="15">
+        </div>
+
+        <button id="checkButton">Verify IMEI</button>
+
+        <div id="loader" class="loader hidden"></div>
+        <div id="results" class="results-container">
+            </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
