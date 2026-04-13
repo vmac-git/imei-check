@@ -53,60 +53,63 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function displayResults(data, source) {
     const isFree = source.includes("Local");
-    const themeColor = isFree ? '#27ae60' : '#e67e22'; // Verde para grátis, Laranja para pago
+    const themeColor = isFree ? '#27ae60' : '#e67e22'; 
     const sourceLabel = isFree ? 'DATABASE MATCH' : 'EXTERNAL LOOKUP';
 
     resultsDiv.innerHTML = `
-        <div class="result-card" style="
-            border-left: 6px solid ${themeColor};
-            background: #fff;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 450px;
-            margin: 20px auto;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            animation: fadeIn 0.5s ease;
+        <div class="result-container" style="
+            max-width: 500px;
+            margin: 30px auto;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            animation: fadeIn 0.4s ease-out;
+            color: #333;
         ">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div style="text-align: center; margin-bottom: 15px;">
                 <span style="
-                    background: ${themeColor}15;
-                    color: ${themeColor};
-                    padding: 4px 12px;
-                    border-radius: 20px;
-                    font-size: 0.75rem;
-                    font-weight: bold;
-                    letter-spacing: 1px;
-                    border: 1px solid ${themeColor}30;
+                    background: ${themeColor};
+                    color: #fff;
+                    padding: 4px 15px;
+                    border-radius: 50px;
+                    font-size: 0.65rem;
+                    font-weight: 800;
+                    letter-spacing: 1.5px;
+                    text-transform: uppercase;
                 ">
                     ${sourceLabel}
                 </span>
-                <small style="color: #999;">${new Date().toLocaleDateString()}</small>
             </div>
 
-            <h2 style="margin: 0 0 5px 0; color: #2c3e50; font-size: 1.5rem;">${data.brand}</h2>
-            <h3 style="margin: 0 0 20px 0; color: #7f8c8d; font-weight: 400; font-size: 1.1rem;">${data.model}</h3>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <div style="background: #f8f9fa; padding: 10px; border-radius: 8px;">
-                    <label style="display: block; font-size: 0.7rem; color: #95a5a6; text-transform: uppercase;">Brand</label>
-                    <strong style="color: #2c3e50;">${data.brand}</strong>
+            <div style="
+                border: 2px solid ${themeColor}40;
+                border-radius: 12px;
+                overflow: hidden;
+                background: transparent;
+            ">
+                <div style="background: ${themeColor}10; padding: 15px; border-bottom: 1px solid ${themeColor}30; text-align: center;">
+                    <h2 style="margin: 0; font-size: 1.4rem; color: #2c3e50;">Device Information</h2>
                 </div>
-                <div style="background: #f8f9fa; padding: 10px; border-radius: 8px;">
-                    <label style="display: block; font-size: 0.7rem; color: #95a5a6; text-transform: uppercase;">Model</label>
-                    <strong style="color: #2c3e50;">${data.model}</strong>
+
+                <div style="padding: 10px;">
+                    <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #ddd;">
+                        <span style="font-weight: 600; color: #7f8c8d;">Brand:</span>
+                        <span style="color: #2c3e50; font-weight: bold;">${data.brand}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 12px;">
+                        <span style="font-weight: 600; color: #7f8c8d;">Model:</span>
+                        <span style="color: #2c3e50; font-weight: bold;">${data.model}</span>
+                    </div>
                 </div>
             </div>
 
-            <div style="margin-top: 15px; font-size: 0.8rem; color: #95a5a6; text-align: center;">
-                Source: <span style="color: ${themeColor}; font-weight: 600;">${source}</span>
+            <div style="margin-top: 15px; text-align: center; font-size: 0.8rem; color: #7f8c8d;">
+                Data retrieved via <strong style="color: ${themeColor};">${source}</strong>
             </div>
         </div>
 
         <style>
             @keyframes fadeIn {
-                from { opacity: 0; transform: translateY(10px); }
-                to { opacity: 1; transform: translateY(0); }
+                from { opacity: 0; transform: scale(0.98); }
+                to { opacity: 1; transform: scale(1); }
             }
         </style>
     `;
