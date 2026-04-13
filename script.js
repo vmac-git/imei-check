@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const deviceName = `${data.brand} ${data.model}`;
         let content = `
             <h2>${deviceName}</h2>
-            <p style="font-size: 0.9em; color: #666;"><em>Fonte: ${source}</em></p>
+            <p style="font-size: 0.9em; color: #666;"><em>Source: ${source}</em></p>
             <ul>
                 <li><strong>Brand:</strong> ${data.brand}</li>
                 <li><strong>Model:</strong> ${data.model}</li>
