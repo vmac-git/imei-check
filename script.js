@@ -51,65 +51,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function displayResults(data, source) {
+   function displayResults(data, source) {
     const isFree = source.includes("Local");
-    const themeColor = isFree ? '#27ae60' : '#e67e22'; 
+    const themeColor = isFree ? '#27ae60' : '#3498db'; // Verde para Local, Azul para API
     const sourceLabel = isFree ? 'DATABASE MATCH' : 'EXTERNAL LOOKUP';
 
     resultsDiv.innerHTML = `
         <div class="result-container" style="
-            max-width: 500px;
-            margin: 30px auto;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            max-width: 100%;
+            margin-top: 20px;
+            font-family: sans-serif;
             animation: fadeIn 0.4s ease-out;
-            color: #333;
         ">
-            <div style="text-align: center; margin-bottom: 15px;">
+            <div style="text-align: center; margin-bottom: 12px;">
                 <span style="
-                    background: ${themeColor};
-                    color: #fff;
-                    padding: 4px 15px;
-                    border-radius: 50px;
+                    background: ${themeColor}20;
+                    color: ${themeColor};
+                    padding: 4px 12px;
+                    border-radius: 4px;
                     font-size: 0.65rem;
-                    font-weight: 800;
-                    letter-spacing: 1.5px;
-                    text-transform: uppercase;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    border: 1px solid ${themeColor}40;
                 ">
                     ${sourceLabel}
                 </span>
             </div>
 
             <div style="
-                border: 2px solid ${themeColor}40;
-                border-radius: 12px;
+                border: 1px solid #3d4451;
+                border-radius: 8px;
                 overflow: hidden;
-                background: transparent;
+                background: #1a202c; /* Cor escura combinando com seu fundo */
             ">
-                <div style="background: ${themeColor}10; padding: 15px; border-bottom: 1px solid ${themeColor}30; text-align: center;">
-                    <h2 style="margin: 0; font-size: 1.4rem; color: #2c3e50;">Device Information</h2>
+                <div style="padding: 15px; border-bottom: 1px solid #3d4451; text-align: center;">
+                    <h2 style="margin: 0; font-size: 1.2rem; color: #ffffff;">${data.brand} ${data.model}</h2>
                 </div>
 
-                <div style="padding: 10px;">
-                    <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #ddd;">
-                        <span style="font-weight: 600; color: #7f8c8d;">Brand:</span>
-                        <span style="color: #2c3e50; font-weight: bold;">${data.brand}</span>
+                <div style="padding: 5px;">
+                    <div style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #2d3748;">
+                        <span style="color: #a0aec0; font-size: 0.9rem;">Brand:</span>
+                        <span style="color: #ffffff; font-weight: bold;">${data.brand}</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; padding: 12px;">
-                        <span style="font-weight: 600; color: #7f8c8d;">Model:</span>
-                        <span style="color: #2c3e50; font-weight: bold;">${data.model}</span>
+                        <span style="color: #a0aec0; font-size: 0.9rem;">Model:</span>
+                        <span style="color: #ffffff; font-weight: bold;">${data.model}</span>
                     </div>
                 </div>
             </div>
 
-            <div style="margin-top: 15px; text-align: center; font-size: 0.8rem; color: #7f8c8d;">
-                Data retrieved via <strong style="color: ${themeColor};">${source}</strong>
+            <div style="margin-top: 10px; text-align: center; font-size: 0.75rem; color: #718096;">
+                Source: <span style="color: ${themeColor};">${source}</span>
             </div>
         </div>
 
         <style>
             @keyframes fadeIn {
-                from { opacity: 0; transform: scale(0.98); }
-                to { opacity: 1; transform: scale(1); }
+                from { opacity: 0; transform: translateY(5px); }
+                to { opacity: 1; transform: translateY(0); }
             }
         </style>
     `;
