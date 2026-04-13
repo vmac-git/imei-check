@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsDiv = document.getElementById('results');
     const loader = document.getElementById('loader');
 
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_6SuBPwUi5NGGDCL8OxX8-C03pytF5D30oH-5QgWrayIwevwwemVmy0is69nCls54PA/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3IrnlAg2IJ3bv49V8yysZf1KCEWrMzyrIRsxXlCsi6tB1ju_NsvjFVPgQsw9xwzlpYQ/exec';
 
     checkButton.addEventListener('click', checkImei);
 
