@@ -1,5 +1,6 @@
 /**
- * @description Frontend logic to minimize API costs by checking local database first.
+ * @description Frontend otimizado para o fluxo do Código.gs v9.0.
+ * O Backend agora decide se usa a base local ou a API paga.
  */
 document.addEventListener('DOMContentLoaded', () => {
     const imeiInput = document.getElementById('imeiInput');
@@ -7,60 +8,61 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsDiv = document.getElementById('results');
     const loader = document.getElementById('loader');
 
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw3IrnlAg2IJ3bv49V8yysZf1KCEWrMzyrIRsxXlCsi6tB1ju_NsvjFVPgQsw9xwzlpYQ/exec';
+    // Mantenha sua URL de implantação atualizada
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTOcNwmEmfteglypID5LBZJ8hJL7bLjilmxJr7KrnhOMbtEMizRsqPL0NqLYrLMmcTHg/exec';
 
     checkButton.addEventListener('click', checkImei);
+    imeiInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') checkImei(); });
 
     async function checkImei() {
         const imei = imeiInput.value.trim();
+        
+        // Validação básica de dígitos
         if (!/^\d{14,15}$/.test(imei)) {
             displayError('Please enter a valid IMEI (14-15 digits).');
             return;
         }
 
-        const tac = imei.substring(0, 8);
         resultsDiv.innerHTML = '';
         loader.classList.remove('hidden');
 
         try {
-            // --- STEP 1: LOCAL SEARCH (FREE) ---
-            console.log("Checking local spreadsheet...");
-            const localResponse = await fetch(`${GOOGLE_SCRIPT_URL}?action=lookupLocal&tac=${tac}`);
-            const localData = await localResponse.json();
+            /**
+             * Chamada Única:
+             * O Google Script vai:
+             * 1. Olhar na aba 'Página1' (Grátis)
+             * 2. Se não achar, vai na API imei.info (Pago)
+             * 3. Se vier da API, ele salva no Sheets antes de responder.
+             */
+            const response = await fetch(`${GOOGLE_SCRIPT_URL}?imei=${imei}`);
+            const result = await response.json();
 
-            if (localData.status === 'found') {
-                displayResults(localData.data, "Local Database (Free)");
-                loader.classList.add('hidden');
-                return; // INTERRUPÇÃO: Se achou local, não gasta dinheiro.
-            }
-
-            // --- STEP 2: EXTERNAL SEARCH (PAID) ---
-            console.log("Not found locally. Fetching from External API...");
-            const externalResponse = await fetch(`${GOOGLE_SCRIPT_URL}?action=lookupExternal&imei=${imei}`);
-            const externalData = await externalResponse.json();
-
-            if (externalData.status === 'found') {
-                displayResults(externalData.data, "External API (imei.info)");
+            if (result.status === 'found') {
+                displayResults(result.data, result.source);
             } else {
-                displayError(externalData.message || 'IMEI not found anywhere.');
+                displayError(result.message || 'IMEI not found in database or API.');
             }
 
         } catch (error) {
-            displayError('Network error. Check your Google Script deployment.');
+            console.error("Erro na requisição:", error);
+            displayError('Network error. Check your Google Script deployment and permissions.');
         } finally {
             loader.classList.add('hidden');
         }
     }
 
     function displayResults(data, source) {
+        // Define a cor: Verde para Local (Economia), Laranja para API (Custo)
         const isFree = source.includes("Local");
+        const sourceColor = isFree ? '#27ae60' : '#e67e22';
+        
         resultsDiv.innerHTML = `
-            <div style="border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
-                <h2 style="margin-top:0;">${data.brand} ${data.model}</h2>
-                <p style="color: ${isFree ? '#27ae60' : '#e67e22'}; font-weight: bold;">
+            <div style="border: 2px solid ${sourceColor}; padding: 15px; border-radius: 8px; background-color: #f9f9f9;">
+                <h2 style="margin-top:0; color: #333;">${data.brand} ${data.model}</h2>
+                <p style="color: ${sourceColor}; font-weight: bold; font-size: 1.1em;">
                     Source: ${source}
                 </p>
-                <hr>
+                <hr style="border: 0; border-top: 1px solid #ddd;">
                 <p><strong>Brand:</strong> ${data.brand}</p>
                 <p><strong>Model:</strong> ${data.model}</p>
             </div>
@@ -68,6 +70,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displayError(msg) {
-        resultsDiv.innerHTML = `<p style="color:red; font-weight:bold;">${msg}</p>`;
+        resultsDiv.innerHTML = `
+            <div style="background-color: #fee; border: 1px solid #faa; padding: 10px; border-radius: 5px;">
+                <p style="color:red; font-weight:bold; margin:0;">${msg}</p>
+            </div>
+        `;
     }
 });
