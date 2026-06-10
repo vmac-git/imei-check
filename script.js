@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
 
     // URL do seu Google Apps Script (v9.0)
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTOcNwmEmfteglypID5LBZJ8hJL7bLjilmxJr7KrnhOMbtEMizRsqPL0NqLYrLMmcTHg/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxf6iEcRtiunXSnrcwmjttmXBS1WJkib_R-ajTUiX21lv6SM_IR2hagBbaDlAKVp37yOQ/exec';
 
     checkButton.addEventListener('click', checkImei);
     imeiInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') checkImei(); });
