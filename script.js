@@ -4,15 +4,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultsDiv = document.getElementById('results');
     const loader = document.getElementById('loader');
 
-    // URL do seu Google Apps Script (v9.0)
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxf6iEcRtiunXSnrcwmjttmXBS1WJkib_R-ajTUiX21lv6SM_IR2hagBbaDlAKVp37yOQ/exec';
+    // URL do seu Google Apps Script (atualize após novo deploy)
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxyOwbEd_PkqyIAbEu-Og8LNDcpRTEP5-adazSn8KsmUo_o3eEmqmbgai4pnir8QYohWg/exec';
 
     checkButton.addEventListener('click', checkImei);
     imeiInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') checkImei(); });
 
     async function checkImei() {
         const imei = imeiInput.value.trim();
-        
+
         if (!/^\d{14,15}$/.test(imei)) {
             displayError('Please enter a valid IMEI (14-15 digits).');
             return;
@@ -20,27 +20,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resultsDiv.innerHTML = '';
         loader.classList.remove('hidden');
+        checkButton.disabled = true;
 
-        try {
-            // Chamada única ao backend (que já gerencia local vs externo)
-            const response = await fetch(`${GOOGLE_SCRIPT_URL}?imei=${imei}`);
-            const result = await response.json();
+        // Usa JSONP para contornar o bloqueio de CORS
+        const callbackName = 'imeiCallback_' + Date.now();
+        const script = document.createElement('script');
 
+        // Timeout de segurança (10 segundos)
+        const timeout = setTimeout(() => {
+            cleanup();
+            displayError('Request timed out. Please try again.');
+        }, 10000);
+
+        function cleanup() {
+            loader.classList.add('hidden');
+            checkButton.disabled = false;
+            if (document.body.contains(script)) document.body.removeChild(script);
+            delete window[callbackName];
+            clearTimeout(timeout);
+        }
+
+        window[callbackName] = function(result) {
+            cleanup();
             if (result.status === 'found') {
                 displayResults(result.data, result.source);
             } else {
                 displayError(result.message || 'IMEI not found.');
             }
-        } catch (error) {
+        };
+
+        script.src = `${GOOGLE_SCRIPT_URL}?imei=${imei}&callback=${callbackName}`;
+        script.onerror = () => {
+            cleanup();
             displayError('Connection failed. Please check permissions.');
-        } finally {
-            loader.classList.add('hidden');
-        }
+        };
+
+        document.body.appendChild(script);
     }
 
     function displayResults(data, source) {
         const isFree = source.includes("Local");
-        const themeColor = isFree ? '#48bb78' : '#3182ce'; 
+        const themeColor = isFree ? '#48bb78' : '#3182ce';
         const sourceLabel = isFree ? 'DATABASE MATCH' : 'EXTERNAL LOOKUP';
 
         resultsDiv.innerHTML = `
@@ -61,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
 
                 <div style="
-                    background-color: #1a202c; 
+                    background-color: #1a202c;
                     border: 1px solid #4a5568;
                     border-radius: 12px;
                     overflow: hidden;
